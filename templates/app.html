@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mood Music Player 🎵</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 2.2em;
+  text-shadow: 0 0 15px #00e0ff;
+}
+
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.column {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+#mood-ring {
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: glow 3s infinite alternate;
+}
+
+#video {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #00e0ff;
+  box-shadow: 0 0 25px #00e0ff80;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 10px #00e0ff);
+  }
+  to {
+    filter: drop-shadow(0 0 25px #ff00c8);
+  }
+}
+
+button,
+select {
+  margin: 6px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+#startCam {
+  background: #4caf50;
+  color: #fff;
+}
+#stopCam {
+  background: #f44336;
+  color: #fff;
+}
+#override-btn {
+  background: #673ab7;
+  color: #fff;
+}
+
+.cam-buttons {
+  text-align: center;
+  margin-top: 15px;
+}
+
+#mood-history {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#mood-history li {
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 6px;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+@media (max-width: 850px) {
+  .main-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CHATBOT UI */
+#chatbot-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #00e0ff;
+  color: #000;
+  font-size: 22px;
+  padding: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 20px #00e0ff;
+  z-index: 9999;
+}
+
+#chatbot-box {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  height: 420px;
+  background: #0f2027;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+#chat-header {
+  background: #00e0ff;
+  color: #000;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#chat-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: #fff;
+}
+
+#chat-input-area {
+  display: flex;
+  padding: 8px;
+  border-top: 1px solid #444;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.03);
+  color: #fff;
+}
+
+#chat-send {
+  margin-left: 5px;
+  background: #00e0ff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.message-you { color: #b3e5fc; }
+.message-ai  { color: #fff; font-weight:600; }
+.system-note  { color: #cfd8dc; font-style: italic; font-size: 13px; }
+</style>
+</head>
+
+<body>
+
+<h1>🎵 AI Mood Music Player</h1>
+
+<div class="main-container">
+  <div class="column">
+    <h2 style="text-align:center;">🎥 Live Camera</h2>
+    <div id="mood-ring">
+      <video id="video" autoplay muted></video>
+    </div>
+
+    <div class="cam-buttons">
+      <button id="startCam">Start Camera</button>
+      <button id="stopCam" disabled>Stop Camera</button>
+    </div>
+  </div>
+
+  <div class="column">
+    <h2 style="text-align:center;">🎧 Mood & Music</h2>
+
+    <div style="text-align:center;font-size:1.3em;">
+      Current Mood: <span id="mood">--</span>
+    </div>
+
+    <div style="text-align:center;margin-top:10px;">
+      <audio id="audio" controls></audio>
+    </div>
+
+    <h3 style="text-align:center;">Mood History</h3>
+    <ul id="mood-history"></ul>
+
+    <h3 style="text-align:center;">Manual Mood Override</h3>
+    <div style="text-align:center;">
+      <select id="manual-mood">
+        <option value="happy">Happy</option>
+        <option value="sad">Sad</option>
+        <option value="neutral">Neutral</option>
+      </select>
+      <button id="override-btn">Set Mood</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<div id="chatbot-btn">💬</div>
+
+<div id="chatbot-box">
+  <div id="chat-header">
+    AI Assistant 🤖
+    <span id="chat-close" style="cursor:pointer;">✖</span>
+  </div>
+  <div id="chat-body"></div>
+  <div id="chat-input-area">
+    <input type="text" id="chat-input" placeholder="Type your message...">
+    <button id="chat-send">Send</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Music App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+            animation: pulseReverse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        @keyframes pulseReverse {
+            0%, 100% { opacity: 0.6; transform: scale(1.1); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .landing-container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .title {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1s ease-out, titleGlow 2s ease-in-out infinite;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease-out 0.6s both, buttonPulse 2s ease-in-out 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .start-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .floating-emoji:nth-child(1) {
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-emoji:nth-child(2) {
+            top: 70%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-emoji:nth-child(3) {
+            top: 25%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        .floating-emoji:nth-child(4) {
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .floating-emoji:nth-child(5) {
+            top: 50%;
+            left: 5%;
+            animation-delay: 3s;
+        }
+
+        .floating-emoji:nth-child(6) {
+            top: 60%;
+            right: 8%;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-30px) translateX(10px) rotate(10deg) scale(1.1);
+            }
+            50% {
+                transform: translateY(-60px) translateX(-10px) rotate(-10deg) scale(1);
+            }
+            75% {
+                transform: translateY(-30px) translateX(10px) rotate(5deg) scale(1.05);
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .features {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .fade-out {
+            animation: fadeOutZoom 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeOutZoom {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            width: 20px;
+            height: 20px;
+            animation: rippleEffect 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(50);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .start-btn {
+                padding: 15px 40px;
+                font-size: 1rem;
+            }
+
+            .floating-emoji {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <h1 class="title">🎧 Mood Music Player</h1>
+        <p class="subtitle">Let AI detect your mood and play songs automatically</p>
+
+        <button class="start-btn" onclick="startExperience(event)">
+            Start Experience 🎵
+        </button>
+
+        <div class="features">
+            <div class="feature">🎭 AI Mood Detection</div>
+            <div class="feature">🎶 Auto Music Selection</div>
+            <div class="feature">✨ Personalized Experience</div>
+        </div>
+    </div>
+
+    <!-- Floating music emojis -->
+    <div class="floating-emoji">🎶</div>
+    <div class="floating-emoji">🎵</div>
+    <div class="floating-emoji">🎼</div>
+    <div class="floating-emoji">🎹</div>
+    <div class="floating-emoji">🎸</div>
+    <div class="floating-emoji">🎺</div>
+
+    <script>
+        function startExperience(event) {
+            // Create ripple effect
+            const button = event.target;
+            const rect = button.getBoundingClientRect();
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = (event.clientX - rect.left - 10) + 'px';
+            ripple.style.top = (event.clientY - rect.top - 10) + 'px';
+            button.appendChild(ripple);
+
+            // Add fade out effect to body
+            document.body.classList.add('fade-out');
+
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = 'app.html';
+            }, 800);
+        }
+    </script>
